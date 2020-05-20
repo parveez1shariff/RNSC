@@ -1,0 +1,215 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>read_rain_NC</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-02-25"><meta name="DC.source" content="read_rain_NC.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput">clear <span class="string">all</span>;
+close <span class="string">all</span>;
+
+
+folder=<span class="string">'E:\Matlab Program\Programs\RNSC\Rainfall NC'</span>;
+filetype=<span class="string">'*.nc'</span>;  <span class="comment">% or xlsx</span>
+f=fullfile(folder,filetype);
+d=dir(f);
+<span class="keyword">for</span> k=1:numel(d);
+  rainlat =  ncread(fullfile(folder,d(k).name),<span class="string">'lat'</span>);
+  rainlog =  ncread(fullfile(folder,d(k).name),<span class="string">'lon'</span>);
+  rainrec = ncread(fullfile(folder,d(k).name),<span class="string">'RF'</span>);
+
+<span class="comment">% rainlat = xlsread('rainfall data.xlsx',2);</span>
+<span class="comment">% rainlog = xlsread('rainfall data.xlsx',3);</span>
+<span class="comment">% rainrec = xlsread('rainfall data.xlsx',4);</span>
+
+rainval = rainlat(:,1);
+rain_latval = rainlat(:,1);
+rain_logval = rainlog(:,1);
+
+latr = [];
+<span class="keyword">for</span> i = 1:length(rainval)
+    <span class="keyword">if</span>(rainval(i)&gt;=13.125 &amp;&amp; rainval(i)&lt;=15.375)
+        latr(i) = i;
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+
+rainlogval = rainlog(:,1);
+
+logr = [];
+<span class="keyword">for</span> i = 1:length(rainlogval)
+    <span class="keyword">if</span>(rainlogval(i)&gt;=77.625 &amp;&amp; rainlogval(i)&lt;=80.125)
+        logr(i) = i;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+latr = nonzeros(latr)';
+logr = nonzeros(logr)';
+<span class="comment">% if isequal(size(latr),size(logr))</span>
+<span class="comment">%     c = [latr;logr];</span>
+<span class="comment">% elseif (length(latr)&lt;length(logr))</span>
+<span class="comment">%     latr = ([latr ones(1,(length(logr)-length(latr)))])</span>
+<span class="comment">% end</span>
+
+rain_recval = zeros(length(latr),length(logr));
+
+<span class="keyword">for</span> r = 1:length(latr)
+    <span class="keyword">for</span> c = 1:length(logr)
+        rain_recval(r,c) = rainrec([latr(r)], [logr(c)]);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+close <span class="string">all</span>;
+figure();
+surfl(rain_recval)
+<span class="comment">% colormap(jet)    % change color map</span>
+<span class="comment">% shading interp</span>
+
+figure();
+plot(rain_recval);
+
+path = <span class="string">'E:\Matlab Program\Programs\RNSC\Rainfall Extracted_NC'</span>;
+<span class="comment">%filename = 'rainfall_Extracted.xlsx';</span>
+filename = [path, filesep, <span class="string">'Rainfall_Extract'</span>,num2str(k)] ;
+xlswrite(filename,rain_recval);
+disp(filename)
+<span class="keyword">end</span>
+
+web(<span class="string">'html/read_rain_NC.html'</span>)
+</pre><pre class="codeoutput">E:\Matlab Program\Programs\RNSC\Rainfall Extracted_NC\Rainfall_Extract1
+E:\Matlab Program\Programs\RNSC\Rainfall Extracted_NC\Rainfall_Extract2
+</pre><img vspace="5" hspace="5" src="read_rain_NC_01.png" alt=""> <img vspace="5" hspace="5" src="read_rain_NC_02.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clear all;
+close all;
+
+
+folder='E:\Matlab Program\Programs\RNSC\Rainfall NC';
+filetype='*.nc';  % or xlsx
+f=fullfile(folder,filetype);
+d=dir(f);
+for k=1:numel(d);
+  rainlat =  ncread(fullfile(folder,d(k).name),'lat');
+  rainlog =  ncread(fullfile(folder,d(k).name),'lon');
+  rainrec = ncread(fullfile(folder,d(k).name),'RF');
+
+% rainlat = xlsread('rainfall data.xlsx',2);
+% rainlog = xlsread('rainfall data.xlsx',3);
+% rainrec = xlsread('rainfall data.xlsx',4);
+
+rainval = rainlat(:,1);
+rain_latval = rainlat(:,1);
+rain_logval = rainlog(:,1);
+
+latr = [];
+for i = 1:length(rainval)
+    if(rainval(i)>=13.125 && rainval(i)<=15.375)
+        latr(i) = i;          
+    end
+    
+end
+
+rainlogval = rainlog(:,1);
+
+logr = [];
+for i = 1:length(rainlogval)
+    if(rainlogval(i)>=77.625 && rainlogval(i)<=80.125)
+        logr(i) = i;
+    end
+end
+
+latr = nonzeros(latr)';
+logr = nonzeros(logr)';
+% if isequal(size(latr),size(logr))
+%     c = [latr;logr];
+% elseif (length(latr)<length(logr))
+%     latr = ([latr ones(1,(length(logr)-length(latr)))])
+% end
+    
+rain_recval = zeros(length(latr),length(logr));
+
+for r = 1:length(latr)
+    for c = 1:length(logr)
+        rain_recval(r,c) = rainrec([latr(r)], [logr(c)]);
+    end
+end
+
+close all;
+figure(); 
+surfl(rain_recval)
+% colormap(jet)    % change color map
+% shading interp
+
+figure();
+plot(rain_recval);
+
+path = 'E:\Matlab Program\Programs\RNSC\Rainfall Extracted_NC';
+%filename = 'rainfall_Extracted.xlsx';
+filename = [path, filesep, 'Rainfall_Extract',num2str(k)] ;
+xlswrite(filename,rain_recval);
+disp(filename)
+end
+
+web('html/read_rain_NC.html')
+##### SOURCE END #####
+--></body></html>
